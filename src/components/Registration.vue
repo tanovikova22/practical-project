@@ -1,57 +1,84 @@
 <template>
-  <v-flex xs18 sm12 md6>
+  <v-flex xs24 sm16 md8>
     <v-container>
       <h1>Registration page</h1>
       <v-card class="d-flex justify-center ma-10">
         <v-tabs vertical>
-          <v-tab>
+          <v-tab :disabled="invalidFirstPage">
             <v-icon left>mdi-account</v-icon>First steps
           </v-tab>
-          <v-tab>
+          <v-tab :disabled="invalidSecondPage">
             <v-icon left>mdi-lock</v-icon>Finishing
           </v-tab>
 
-          <!-- <ValidationObserver> -->
-          <v-tab-item>
-            <v-card flat>
-              <v-form @submit.prevent="onSubmit">
-                <v-container>
-                  <v-col>
-                    <v-col cols="12">
-                      <!-- <ValidationProvider> -->
-                      <v-text-field v-model="name" label="Name" required @blur="onInput"></v-text-field>
-                      <!-- </ValidationProvider> -->
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field v-model="email" label="E-mail" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field v-model="phone" label="Phone number" required></v-text-field>
-                    </v-col>
-                  </v-col>
-                </v-container>
-              </v-form>
-            </v-card>
+          <v-tab-item class="pa-10">
+            <validation-observer ref="firstPage">
+              <form @submit.prevent="onSubmit">
+                <validation-provider
+                  name="name"
+                  :rules="{required:true,regex:'[A-Z][a-z]{2,}'}"
+                  v-slot="{ errors }"
+                >
+                  <v-text-field v-model="name" label="Name" :error-messages="errors"></v-text-field>
+                </validation-provider>
+
+                <validation-provider
+                  name="Email"
+                  :rules="{required: true, email}"
+                  v-slot="{ errors }"
+                >
+                  <v-text-field v-model="email" label="E-mail" :error-messages="errors"></v-text-field>
+                </validation-provider>
+
+                <validation-provider
+                  name="phone"
+                  :rules="{required: true, min: 10, max:13, regex: '[0-9]'}"
+                  v-slot="{ errors }"
+                >
+                  <v-text-field
+                    v-model="phone"
+                    :counter="13"
+                    label="Phone"
+                    :error-messages="errors"
+                    @blur="onSubmit"
+                  ></v-text-field>
+                </validation-provider>
+              </form>
+            </validation-observer>
           </v-tab-item>
-          <v-tab-item>
-            <v-card flat>
-              <v-form @submit.prevent="onSubmit">
-                <v-container>
-                  <v-col cols="12">
-                    <v-text-field v-model="password" label="Password" required></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field v-model="passwordConfirm" label="Confirm password" required></v-text-field>
-                  </v-col>
-                </v-container>
-              </v-form>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn type="submit" depressed class="primary" :disabled="invalid">Register</v-btn>
-              </v-card-actions>
-            </v-card>
+          <v-tab-item class="pa-10">
+            <validation-observer ref="secondPage">
+              <form>
+                <validation-provider
+                  name="password"
+                  :rules="{required:true, min: 5}"
+                  v-slot="{ errors }"
+                >
+                  <v-text-field
+                    type="password"
+                    v-model="password"
+                    label="Password"
+                    :error-messages="errors"
+                  ></v-text-field>
+                </validation-provider>
+
+                <validation-provider
+                  name="passwordConfirm"
+                  :rules="{required:true, min: 5, is:password}"
+                  v-slot="{ errors }"
+                >
+                  <v-text-field
+                    type="password"
+                    v-model="passwordConfirm"
+                    label="Confirm password"
+                    :error-messages="errors"
+                    @blur="onSubmitForm"
+                  ></v-text-field>
+                </validation-provider>
+                <v-btn class="success" :disabled="disabledSend">Finish registration</v-btn>
+              </form>
+            </validation-observer>
           </v-tab-item>
-          <!-- </ValidationObserver> -->
         </v-tabs>
       </v-card>
     </v-container>
@@ -59,6 +86,41 @@
 </template>
 
 <script>
+import { required, max, min, email, regex, is } from "vee-validate/dist/rules";
+import {
+  extend,
+  ValidationObserver,
+  ValidationProvider,
+  setInteractionMode
+} from "vee-validate";
+
+setInteractionMode("eager");
+
+extend("required", {
+  ...required,
+  message: "This field is required"
+});
+extend("min", {
+  ...min,
+  message: "Mast be at least 10 numbers"
+});
+extend("max", {
+  ...max,
+  message: "Must be less then 14"
+});
+extend("email", {
+  ...email,
+  message: "Check email"
+});
+extend("regex", {
+  ...regex,
+  message: "The fromat is {regex}"
+});
+extend("is", {
+  ...is,
+  message: "Check if passwords are similar"
+});
+
 export default {
   data: () => ({
     name: "",
@@ -66,13 +128,32 @@ export default {
     phone: "",
     password: "",
     passwordConfirm: "",
-    regExp: /[A-Z][a-z]{2,}/g
+    invalidSecondPage: true,
+    invalidFirstPage: false,
+    disabledSend: true
   }),
+
   methods: {
-    onInput() {
-      let isMatch = this.name.match(this.regExp);
-      console.log(!!isMatch);
+    onSubmit() {
+      this.$refs.firstPage
+        .validate()
+        .then(
+          success => (
+            (this.invalidSecondPage = !success),
+            (this.invalidFirstPage = success)
+          )
+        );
+      console.log(1);
+    },
+    onSubmitForm() {
+      this.$refs.secondPage
+        .validate()
+        .then(success => (this.disabledSend = !success));
     }
+  },
+  components: {
+    ValidationProvider,
+    ValidationObserver
   }
 };
 </script>
