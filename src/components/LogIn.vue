@@ -21,7 +21,7 @@
               ></v-text-field>
               <div
                 class="error-message"
-                v-if="$v.email.$invalid && $v.password.$dirty"
+                v-if="$v.password.$invalid && $v.password.$dirty"
               >Please enter valid password</div>
             </v-col>
           </v-col>
@@ -33,11 +33,10 @@
             depressed
             class="primary"
             @submit="onSubmit"
-            :disabled="disabled"
+            :disabled="$v.password.$invalid || $v.email.$invalid"
           >Login</v-btn>
         </v-card-actions>
       </v-form>
-      <pre>{{$v.password}}</pre>
     </v-container>
   </v-flex>
 </template>
@@ -47,8 +46,7 @@ import { required, email, minLength } from "vuelidate/lib/validators";
 export default {
   data: () => ({
     email: "",
-    password: "",
-    disabled: true
+    password: ""
   }),
   validations: {
     password: {

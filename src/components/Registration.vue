@@ -11,13 +11,16 @@
             <v-icon left>mdi-lock</v-icon>Finishing
           </v-tab>
 
+          <!-- <ValidationObserver> -->
           <v-tab-item>
             <v-card flat>
               <v-form @submit.prevent="onSubmit">
                 <v-container>
                   <v-col>
                     <v-col cols="12">
-                      <v-text-field v-model="name" label="Name" required></v-text-field>
+                      <!-- <ValidationProvider> -->
+                      <v-text-field v-model="name" label="Name" required @blur="onInput"></v-text-field>
+                      <!-- </ValidationProvider> -->
                     </v-col>
                     <v-col cols="12">
                       <v-text-field v-model="email" label="E-mail" required></v-text-field>
@@ -41,13 +44,14 @@
                     <v-text-field v-model="passwordConfirm" label="Confirm password" required></v-text-field>
                   </v-col>
                 </v-container>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn type="submit" depressed class="primary" @submit="onSubmit">Register</v-btn>
-                </v-card-actions>
               </v-form>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn type="submit" depressed class="primary" :disabled="invalid">Register</v-btn>
+              </v-card-actions>
             </v-card>
           </v-tab-item>
+          <!-- </ValidationObserver> -->
         </v-tabs>
       </v-card>
     </v-container>
@@ -61,21 +65,13 @@ export default {
     email: "",
     phone: "",
     password: "",
-    passwordConfirm: ""
+    passwordConfirm: "",
+    regExp: /[A-Z][a-z]{2,}/g
   }),
   methods: {
-    onSubmit() {
-      console.log(
-        this.name +
-          ";" +
-          this.email +
-          ";" +
-          this.phone +
-          ";" +
-          this.password +
-          ";" +
-          this.passwordConfirm
-      );
+    onInput() {
+      let isMatch = this.name.match(this.regExp);
+      console.log(!!isMatch);
     }
   }
 };
