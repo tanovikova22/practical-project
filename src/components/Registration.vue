@@ -1,125 +1,86 @@
 <template>
-  <v-flex xs24 sm16 md8>
+  <v-flex xs12 sm8 md4>
     <v-container>
       <h1>Registration page</h1>
-      <v-card class="d-flex justify-center ma-10">
-        <v-tabs vertical>
-          <v-tab :disabled="invalidFirstPage">
-            <v-icon left>mdi-account</v-icon>First steps
-          </v-tab>
-          <v-tab :disabled="invalidSecondPage">
-            <v-icon left>mdi-lock</v-icon>Finishing
-          </v-tab>
-
-          <v-tab-item class="pa-10">
-            <validation-observer ref="firstPage">
-              <form @submit.prevent="onSubmit">
-                <validation-provider
-                  name="name"
-                  :rules="{required:true,regex:'[A-Z][a-z]{2,}'}"
-                  v-slot="{ errors }"
-                >
-                  <v-text-field v-model="name" label="Name" :error-messages="errors"></v-text-field>
-                </validation-provider>
-
-                <validation-provider
-                  name="Email"
-                  :rules="{required: true, email}"
-                  v-slot="{ errors }"
-                >
-                  <v-text-field v-model="email" label="E-mail" :error-messages="errors"></v-text-field>
-                </validation-provider>
-
-                <validation-provider
-                  name="phone"
-                  :rules="{required: true, min: 10, max:13, regex: '[0-9]'}"
-                  v-slot="{ errors }"
-                >
-                  <v-text-field
-                    v-model="phone"
-                    :counter="13"
-                    label="Phone"
-                    :error-messages="errors"
-                    @blur="onSubmit"
-                  ></v-text-field>
-                </validation-provider>
-              </form>
-            </validation-observer>
-          </v-tab-item>
-          <v-tab-item class="pa-10">
-            <validation-observer ref="secondPage">
-              <form>
-                <validation-provider
-                  name="password"
-                  :rules="{required:true, min: 5}"
-                  v-slot="{ errors }"
-                >
-                  <v-text-field
-                    type="password"
-                    v-model="password"
-                    label="Password"
-                    :error-messages="errors"
-                  ></v-text-field>
-                </validation-provider>
-
-                <validation-provider
-                  name="passwordConfirm"
-                  :rules="{required:true, min: 5, is:password}"
-                  v-slot="{ errors }"
-                >
-                  <v-text-field
-                    type="password"
-                    v-model="passwordConfirm"
-                    label="Confirm password"
-                    :error-messages="errors"
-                    @blur="onSubmitForm"
-                  ></v-text-field>
-                </validation-provider>
-                <v-btn class="success" :disabled="disabledSend">Finish registration</v-btn>
-              </form>
-            </validation-observer>
-          </v-tab-item>
-        </v-tabs>
+      <v-card class="d-flex justify-center ma-2">
+        <v-form @submit.prevent="onSubmit">
+          <v-container v-if="firstPage">
+            <v-col>
+              <v-col cols="12">
+                <v-text-field type="text" v-model="name" label="Name" @blur="$v.name.$touch()"></v-text-field>
+                <div
+                  class="error-message"
+                  v-if="$v.name.$invalid && $v.name.$dirty"
+                >Please input valid name</div>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field type="email" v-model="email" label="E-mail" @blur="$v.email.$touch()"></v-text-field>
+                <div
+                  class="error-message"
+                  v-if="$v.email.$invalid && $v.email.$dirty"
+                >Please enter valid email</div>
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  type="phone"
+                  v-model="phone"
+                  :counter="13"
+                  label="Phone"
+                  @blur="$v.phone.$touch()"
+                ></v-text-field>
+                <div
+                  class="error-message"
+                  v-if="$v.phone.$invalid && $v.phone.$dirty"
+                >Please enter valid phone</div>
+              </v-col>
+            </v-col>
+          </v-container>
+          <v-container v-else>
+            <v-col cols="12">
+              <v-text-field
+                type="password"
+                v-model="password"
+                label="Password"
+                @blur="$v.password.$touch()"
+              ></v-text-field>
+              <div
+                class="error-message"
+                v-if="$v.password.$invalid && $v.password.$dirty"
+              >Please enter valid password</div>
+            </v-col>
+            <v-col cols="12">
+              <v-text-field
+                type="password"
+                v-model="passwordConfirm"
+                label="Confirm password"
+                @blur="$v.passwordConfirm.$touch()"
+              ></v-text-field>
+              <div
+                class="error-message"
+                v-if="$v.passwordConfirm.$invalid && $v.passwordConfirm.$dirty"
+              >Please enter same password</div>
+            </v-col>
+          </v-container>
+        </v-form>
       </v-card>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn class="primary" :disabled="isDisabled" @click="next">{{nameButton}}</v-btn>
+      </v-card-actions>
     </v-container>
   </v-flex>
 </template>
 
 <script>
-import { required, max, min, email, regex, is } from "vee-validate/dist/rules";
 import {
-  extend,
-  ValidationObserver,
-  ValidationProvider,
-  setInteractionMode
-} from "vee-validate";
-
-setInteractionMode("eager");
-
-extend("required", {
-  ...required,
-  message: "This field is required"
-});
-extend("min", {
-  ...min,
-  message: "Mast be at least 10 numbers"
-});
-extend("max", {
-  ...max,
-  message: "Must be less then 14"
-});
-extend("email", {
-  ...email,
-  message: "Check email"
-});
-extend("regex", {
-  ...regex,
-  message: "The fromat is {regex}"
-});
-extend("is", {
-  ...is,
-  message: "Check if passwords are similar"
-});
+  required,
+  email,
+  minLength,
+  maxLength,
+  sameAs,
+  alpha,
+  numeric
+} from "vuelidate/lib/validators";
 
 export default {
   data: () => ({
@@ -128,32 +89,64 @@ export default {
     phone: "",
     password: "",
     passwordConfirm: "",
-    invalidSecondPage: true,
-    invalidFirstPage: false,
-    disabledSend: true
+    firstPage: true
   }),
 
-  methods: {
-    onSubmit() {
-      this.$refs.firstPage
-        .validate()
-        .then(
-          success => (
-            (this.invalidSecondPage = !success),
-            (this.invalidFirstPage = success)
-          )
-        );
-      console.log(1);
+  validations: {
+    name: {
+      required,
+      minLength: minLength(2),
+      alpha
     },
-    onSubmitForm() {
-      this.$refs.secondPage
-        .validate()
-        .then(success => (this.disabledSend = !success));
+    email: {
+      required,
+      email
+    },
+    phone: {
+      required,
+      maxLength: maxLength(13),
+      numeric
+    },
+    password: {
+      required,
+      minLength: minLength(5)
+    },
+    passwordConfirm: {
+      required,
+      minLength: minLength(5),
+      sameAs: sameAs("password")
     }
   },
-  components: {
-    ValidationProvider,
-    ValidationObserver
+  methods: {
+    onSubmit() {
+      console.log(this.email + ";" + this.password);
+    },
+    next() {
+      if (this.firstPage) {
+        this.firstPage = false;
+      } else {
+        this.onSubmit();
+      }
+    }
+  },
+  computed: {
+    isDisabled() {
+      return (
+        this.$v.phone.$invalid ||
+        this.$v.email.$invalid ||
+        this.$v.name.$invalid
+      );
+    },
+    nameButton() {
+      return this.firstPage ? "Next step " : "Finish";
+    }
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.error-message {
+  color: red;
+  font-size: 10px;
+}
+</style>
