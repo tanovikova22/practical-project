@@ -131,7 +131,6 @@ export default {
         phone: this.phone,
         password: this.password
       };
-      console.log(user);
       this.registrate(user);
     },
     next() {

@@ -43,6 +43,7 @@
 
 <script>
 import { required, email, minLength } from "vuelidate/lib/validators";
+import { mapActions } from "vuex";
 export default {
   data: () => ({
     email: "",
@@ -59,8 +60,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions(["login"]),
     onSubmit() {
-      console.log(this.email + ";" + this.password);
+      this.login({ email: this.email, password: this.password });
     }
   }
 };
