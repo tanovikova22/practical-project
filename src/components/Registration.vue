@@ -78,9 +78,13 @@ import {
   minLength,
   maxLength,
   sameAs,
-  alpha,
-  numeric
+  //alpha,
+  numeric,
+  helpers
 } from "vuelidate/lib/validators";
+import { mapActions } from "vuex";
+
+const alpha = helpers.regex("alpha", /[A-Z][a-z]{2,}/g);
 
 export default {
   data: () => ({
@@ -105,21 +109,30 @@ export default {
     phone: {
       required,
       maxLength: maxLength(13),
+      minLength: minLength(10),
       numeric
     },
     password: {
       required,
-      minLength: minLength(5)
+      minLength: minLength(6)
     },
     passwordConfirm: {
       required,
-      minLength: minLength(5),
+      minLength: minLength(6),
       sameAs: sameAs("password")
     }
   },
   methods: {
+    ...mapActions(["registrate"]),
     onSubmit() {
-      console.log(this.email + ";" + this.password);
+      let user = {
+        email: this.email,
+        name: this.name,
+        phone: this.phone,
+        password: this.password
+      };
+      console.log(user);
+      this.registrate(user);
     },
     next() {
       if (this.firstPage) {
@@ -131,11 +144,11 @@ export default {
   },
   computed: {
     isDisabled() {
-      return (
-        this.$v.phone.$invalid ||
-        this.$v.email.$invalid ||
-        this.$v.name.$invalid
-      );
+      return this.firstPage
+        ? this.$v.phone.$invalid ||
+            this.$v.email.$invalid ||
+            this.$v.name.$invalid
+        : this.$v.password.$invalid || this.$v.passwordConfirm.$invalid;
     },
     nameButton() {
       return this.firstPage ? "Next step " : "Finish";
