@@ -4,23 +4,42 @@ import Router from 'vue-router'
 import Registration from '../components/Registration'
 import LogIn from '../components/LogIn'
 import DashBoard from '../components/DashBoard'
+import HomePage from '../components/HomePage'
+import store from '../store';
 
 Vue.use(Router);
 
-export default new Router({
-    mode: 'history',
-    routes: [
-        {
-            path: '/',
-            component: LogIn
-        },
-        {
-            path: '/registration',
-            component: Registration
-        },
-        {
-            path: '/dashboard',
-            component: DashBoard
-        }
-    ]
-})
+
+function guard(to, from, next) {
+    if (store.getters.isLogged) {
+        next()
+    } else {
+        next('/login?loginError=true')
+    }
+}
+
+export default new Router(
+
+    {
+        mode: 'history',
+        routes: [
+            {
+                path: '/login',
+                component: LogIn
+            },
+            {
+                path: '/registration',
+                component: Registration,
+            },
+            {
+                path: '/dashboard',
+                component: DashBoard,
+                beforeEnter: guard
+            },
+            {
+                path: '/',
+                component: HomePage
+            }
+        ],
+    })
+

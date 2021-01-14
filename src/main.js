@@ -28,5 +28,6 @@ new Vue({
       measurementId: "G-7CFSC6BK5Z"
     };
     firebase.initializeApp(firebaseConfig);
-  }
+
+  },
 }).$mount('#app')

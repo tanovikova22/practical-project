@@ -1,7 +1,13 @@
 <template>
-  <v-container>dashboard</v-container>
+  <v-container>{{showUser}}</v-container>
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    showUser() {
+      return this.$store.getters.getUser;
+    }
+  }
+};
 </script>
