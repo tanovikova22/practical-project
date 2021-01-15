@@ -7,19 +7,25 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        user: null
+        user: null,
+        loading: false
     },
 
     mutations: {
         setUser(state, payload) {
             state.user = payload
+        },
+        setLoading(state, payload) {
+            state.loading = payload
         }
     },
 
     actions: {
-        registrate({ commit }, payload) {
+        async registrate({ commit }, payload) {
 
-            firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
+            commit('setLoading', true)
+
+            await firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
                 .then(user => {
                     let id = user.user.uid;
                     commit('setUser', { ...payload, id })
@@ -32,10 +38,15 @@ export default new Vuex.Store({
                     router.push("/dashboard")
                     localStorage.setItem('user', JSON.stringify({ ...payload }))
                 }).catch(error => console.log(error.message))
+
+            commit('setLoading', false)
         },
 
-        login({ commit }, payload) {
-            firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+        async login({ commit }, payload) {
+
+            commit('setLoading', true)
+
+            await firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
                 .then(user => {
                     let id = user.user.uid;
 
@@ -49,6 +60,8 @@ export default new Vuex.Store({
                     })
 
                 }).catch(error => console.log(error.message))
+
+            commit('setLoading', false)
         },
         logout({ commit }) {
             firebase.auth().signOut().then(() => {
@@ -68,6 +81,10 @@ export default new Vuex.Store({
 
         isLogged(state) {
             return state.user !== null
+        },
+
+        getLoading(state) {
+            return state.loading
         }
     }
 })

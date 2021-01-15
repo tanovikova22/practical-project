@@ -33,6 +33,7 @@
             depressed
             class="primary"
             @submit="onSubmit"
+            :loading="getLoading"
             :disabled="$v.password.$invalid || $v.email.$invalid"
           >Login</v-btn>
         </v-card-actions>
@@ -43,7 +44,7 @@
 
 <script>
 import { required, email, minLength } from "vuelidate/lib/validators";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data: () => ({
     email: "",
@@ -64,6 +65,10 @@ export default {
     onSubmit() {
       this.login({ email: this.email, password: this.password });
     }
+  },
+
+  computed: {
+    ...mapGetters(["getLoading"])
   }
 };
 </script>

@@ -65,7 +65,12 @@
       </v-card>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="primary" :disabled="isDisabled" @click="next">{{nameButton}}</v-btn>
+        <v-btn
+          class="primary"
+          :disabled="isDisabled"
+          :loading="getLoading"
+          @click="next"
+        >{{nameButton}}</v-btn>
       </v-card-actions>
     </v-container>
   </v-flex>
@@ -82,9 +87,9 @@ import {
   numeric,
   helpers
 } from "vuelidate/lib/validators";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
-const alpha = helpers.regex("alpha", /[A-Z][a-z]{2,}/g);
+const alpha = helpers.regex("alpha", /[A-Z][a-z]/g);
 
 export default {
   data: () => ({
@@ -151,7 +156,9 @@ export default {
     },
     nameButton() {
       return this.firstPage ? "Next step " : "Finish";
-    }
+    },
+
+    ...mapGetters(["getLoading"])
   }
 };
 </script>
