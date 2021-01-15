@@ -23,12 +23,14 @@ export default new Vuex.Store({
                 .then(user => {
                     let id = user.user.uid;
                     commit('setUser', { ...payload, id })
-                    localStorage.setItem('user', ...payload)
-                    router.push("/dashboard")
+
+
                     firebase.database().ref('users/' + id).set({
                         ...payload,
                         id
                     })
+                    router.push("/dashboard")
+                    localStorage.setItem('user', JSON.stringify({ ...payload }))
                 }).catch(error => console.log(error.message))
         },
 
