@@ -23,6 +23,7 @@ export default new Vuex.Store({
                 .then(user => {
                     let id = user.user.uid;
                     commit('setUser', { ...payload, id })
+                    localStorage.setItem('user', ...payload)
                     router.push("/dashboard")
                     firebase.database().ref('users/' + id).set({
                         ...payload,
@@ -41,15 +42,17 @@ export default new Vuex.Store({
                     userData.on('value', (snapshot) => {
                         const data = snapshot.val()
                         commit('setUser', { ...data })
+                        localStorage.setItem('user', JSON.stringify({ ...data }))
+                        router.push("/dashboard")
                     })
-                    //router.push("/dashboard")
-
 
                 }).catch(error => console.log(error.message))
         },
         logout({ commit }) {
             firebase.auth().signOut().then(() => {
+
                 commit('setUser', null)
+                localStorage.removeItem('user')
                 router.push('/login')
             }
             ).catch(e => console.log(e))
