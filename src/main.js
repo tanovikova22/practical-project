@@ -25,7 +25,8 @@ new Vue({
       storageBucket: "practical-project-e8b48.appspot.com",
       messagingSenderId: "32560067647",
       appId: "1:32560067647:web:645f41c0da0e79c29af48a",
-      measurementId: "G-7CFSC6BK5Z"
+      measurementId: "G-7CFSC6BK5Z",
+      databaseURL: 'https://practical-project-e8b48-default-rtdb.firebaseio.com/'
     };
     firebase.initializeApp(firebaseConfig);
 

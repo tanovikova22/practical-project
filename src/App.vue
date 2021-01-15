@@ -65,11 +65,6 @@ export default {
         ];
       }
     }
-  },
-  created() {
-    if (localStorage.user) {
-      this.$store.commit("setUser", JSON.parse(localStorage.user));
-    }
   }
 };
 </script>

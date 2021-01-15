@@ -13,9 +13,6 @@ export default new Vuex.Store({
     mutations: {
         setUser(state, payload) {
             state.user = payload
-
-            let parsed = JSON.stringify(payload)
-            localStorage.setItem('user', parsed)
         }
     },
 
@@ -24,9 +21,13 @@ export default new Vuex.Store({
 
             firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
                 .then(user => {
-                    let id = user.uid;
+                    let id = user.user.uid;
                     commit('setUser', { ...payload, id })
                     router.push("/dashboard")
+                    firebase.database().ref('users/' + id).set({
+                        ...payload,
+                        id
+                    })
                 }).catch(error => console.log(error.message))
         },
 
@@ -34,10 +35,24 @@ export default new Vuex.Store({
             firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
                 .then(user => {
                     let id = user.user.uid;
-                    commit('setUser', { ...payload, id })
-                    router.push("/dashboard")
+
+                    let userData = firebase.database().ref('users/' + id)
+
+                    userData.on('value', (snapshot) => {
+                        const data = snapshot.val()
+                        commit('setUser', { ...data })
+                    })
+                    //router.push("/dashboard")
+
 
                 }).catch(error => console.log(error.message))
+        },
+        logout({ commit }) {
+            firebase.auth().signOut().then(() => {
+                commit('setUser', null)
+                router.push('/login')
+            }
+            ).catch(e => console.log(e))
         }
     },
 
