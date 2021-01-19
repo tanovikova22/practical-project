@@ -2,7 +2,7 @@
   <v-flex xs12 sm8 md4>
     <v-container>
       <h1>Registration page</h1>
-      <v-card class="d-flex justify-center ma-2">
+      <v-card class="justify-center pa-2">
         <v-form @submit.prevent="onSubmit">
           <v-container v-if="firstPage">
             <v-col>
@@ -83,13 +83,12 @@ import {
   minLength,
   maxLength,
   sameAs,
-  //alpha,
   numeric,
   helpers
 } from "vuelidate/lib/validators";
 import { mapActions, mapGetters } from "vuex";
 
-const alpha = helpers.regex("alpha", /[A-Z][a-z]/g);
+const alpha = helpers.regex("alpha", /[A-Z][a-z]{2,}/g);
 
 export default {
   data: () => ({

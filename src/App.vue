@@ -3,7 +3,9 @@
     <v-navigation-drawer dark app permanent class="light-blue darken-4">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="title">Menu</v-list-item-title>
+          <v-list-item-title class="title">
+            <router-link :to="'/'" tag="button">Menu</router-link>
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -23,12 +25,18 @@
     </v-navigation-drawer>
     <v-main>
       <router-view></router-view>
+      <v-snackbar v-model="error">
+        {{ error }}
+        <template v-slot:action="{ attrs }">
+          <v-btn color="blue" depressed v-bind="attrs" @click="setError(false)">Close</v-btn>
+        </template>
+      </v-snackbar>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapMutations } from "vuex";
 export default {
   name: "App",
 
@@ -38,8 +46,14 @@ export default {
     };
   },
 
+  methods: {
+    ...mapMutations(["setError"])
+  },
+
   computed: {
-    ...mapGetters(["isLogged"]),
+    error() {
+      return this.$store.getters.getError;
+    },
 
     setMenu() {
       if (this.isLogged) {
@@ -80,5 +94,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+button:focus {
+  outline: 0;
+}
 </style>
 
