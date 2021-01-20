@@ -10,14 +10,5 @@ export default {
         setError(state, payload) {
             state.error = payload
         }
-    },
-
-    getters: {
-        getLoading(state) {
-            return state.loading
-        },
-        getError(state) {
-            return state.error
-        }
     }
 }

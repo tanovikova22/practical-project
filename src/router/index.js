@@ -5,7 +5,9 @@ import Registration from '../components/Registration'
 import LogIn from '../components/LogIn'
 import DashBoard from '../components/DashBoard'
 import HomePage from '../components/HomePage'
-import store from '../store';
+import store from '../store'
+import Users from '../components/Users'
+import Profile from '../components/Profile'
 
 Vue.use(Router);
 
@@ -24,21 +26,39 @@ export default new Router(
         mode: 'history',
         routes: [
             {
-                path: '/login',
-                component: LogIn
-            },
-            {
-                path: '/registration',
-                component: Registration,
-            },
-            {
                 path: '/dashboard',
                 component: DashBoard,
-                beforeEnter: guard
+                beforeEnter: guard,
+                meta: {
+                    layout: 'DashboardLayout'
+                },
+                children: [
+                    {
+                        path: 'users',
+                        component: Users
+                    },
+                    {
+                        path: 'profile',
+                        component: Profile
+                    }
+                ]
             },
             {
                 path: '/',
-                component: HomePage
+                component: HomePage,
+                meta: {
+                    layout: 'AuthLayout'
+                },
+                children: [
+                    {
+                        path: 'login',
+                        component: LogIn
+                    },
+                    {
+                        path: 'registration',
+                        component: Registration
+                    },
+                ]
             }
         ],
     })

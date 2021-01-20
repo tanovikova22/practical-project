@@ -3,7 +3,9 @@ const getters = {
     isLogged: ({ auth }) => auth.user !== null,
 
     getLoading: ({ common }) => common.loading,
-    getError: ({ common }) => common.error
+    getError: ({ common }) => common.error,
+
+    getLayout: ({ layouts }) => layouts.layout
 }
 
 export default getters;
