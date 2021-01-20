@@ -6,16 +6,6 @@ export default {
         user: null
     },
 
-    getters: {
-        getUser(state) {
-            return state.user
-        },
-
-        isLogged(state) {
-            return state.user !== null
-        }
-    },
-
     mutations: {
         setUser(state, payload) {
             state.user = payload
@@ -48,20 +38,19 @@ export default {
 
             commit('setLoading', true)
 
-            await firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
-                .then(user => {
-                    let id = user.user.uid;
-
-                    let userData = firebase.database().ref('users/' + id)
-
-                    userData.on('value', (snapshot) => {
-                        const data = snapshot.val()
-                        commit('setUser', { ...data })
-                        localStorage.setItem('user', JSON.stringify({ ...data }))
-                        router.push("/dashboard")
-                    })
-
-                }).catch(error => commit('setError', error.message))
+            try {
+                let response = await firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+                let id = response.user.uid;
+                let userData = firebase.database().ref('users/' + id)
+                userData.on('value', (snapshot) => {
+                    const data = snapshot.val()
+                    commit('setUser', { ...data })
+                    localStorage.setItem('user', JSON.stringify({ ...data }))
+                    router.push("/dashboard")
+                })
+            } catch (error) {
+                commit('setError', error.message)
+            }
 
             commit('setLoading', false)
         },

@@ -24,11 +24,13 @@
       </v-list>
     </v-navigation-drawer>
     <v-main>
-      <router-view></router-view>
-      <v-snackbar v-model="error">
-        {{ error }}
+      <transition mode="out-in">
+        <router-view></router-view>
+      </transition>
+      <v-snackbar :value="showWindow" @input="setError('')">
+        {{ getError }}
         <template v-slot:action="{ attrs }">
-          <v-btn color="blue" depressed v-bind="attrs" @click="setError(false)">Close</v-btn>
+          <v-btn color="blue" depressed v-bind="attrs" @click="setError('')">Close</v-btn>
         </template>
       </v-snackbar>
     </v-main>
@@ -36,7 +38,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 export default {
   name: "App",
 
@@ -51,8 +53,13 @@ export default {
   },
 
   computed: {
-    error() {
-      return this.$store.getters.getError;
+    ...mapGetters(["getError"]),
+
+    showWindow() {
+      if (this.getError) {
+        return true;
+      }
+      return false;
     },
 
     setMenu() {
