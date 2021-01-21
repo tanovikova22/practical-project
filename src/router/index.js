@@ -44,7 +44,7 @@ export default new Router(
                 ]
             },
             {
-                path: '/',
+                path: '/app',
                 component: HomePage,
                 meta: {
                     layout: 'AuthLayout'
