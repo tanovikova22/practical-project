@@ -1,7 +1,12 @@
 <template>
   <v-container>
-    <h1>Hi, {{getUser.name}}</h1>
-    <v-btn @click="logout()">Log Out</v-btn>
+    <v-flex d-flex flex-row>
+      <h2 class="ma-2 mr-5">Hi, {{getUser.name}}</h2>
+      <v-btn class="ma-2" plain @click="logout()">Log Out</v-btn>
+    </v-flex>
+    <hr>
+
+    <router-view></router-view>
   </v-container>
 </template>
 

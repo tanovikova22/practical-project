@@ -3,13 +3,17 @@ import router from './../../router'
 
 export default {
     state: {
-        user: null
+        user: null,
+        allUsers: null
     },
 
     mutations: {
         setUser(state, payload) {
             state.user = payload
         },
+        setAll(state, payload) {
+            state.allUsers = payload
+        }
     },
 
     actions: {
@@ -54,14 +58,26 @@ export default {
 
             commit('setLoading', false)
         },
-        logout({ commit }) {
-            firebase.auth().signOut().then(() => {
+        async logout({ commit }) {
+            await firebase.auth().signOut().then(() => {
 
                 commit('setUser', null)
                 localStorage.removeItem('user')
-                router.push('/login')
+                router.push('/app')
             }
             ).catch(e => commit('setError', e.message))
+        },
+        async getAllUsers({ commit }) {
+            commit('setLoading', true)
+            try {
+                await firebase.database().ref('users').once('value').then((snapshot) => {
+                    commit('setAll', Object.values(snapshot.val()))
+                })
+            } catch (e) {
+                commit('setError', e.message)
+            }
+            commit('setLoading', false)
+
         }
     },
 

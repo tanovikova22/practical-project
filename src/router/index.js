@@ -35,12 +35,15 @@ export default new Router(
                 children: [
                     {
                         path: 'users',
-                        component: Users
+                        component: Users,
+                        layout: 'DashboardLayout'
                     },
                     {
-                        path: 'profile',
-                        component: Profile
-                    }
+                        path: 'profile/:id',
+                        name: 'Profile',
+                        component: Profile,
+                        layout: 'DashboardLayout'
+                    },
                 ]
             },
             {
@@ -59,6 +62,10 @@ export default new Router(
                         component: Registration
                     },
                 ]
+            },
+            {
+                path: '*',
+                redirect: '/app'
             }
         ],
     })

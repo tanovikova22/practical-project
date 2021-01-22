@@ -25,7 +25,11 @@ export default {
 
   computed: {
     layout() {
-      return this.$route.meta.layout || "AuthLayout";
+      return (
+        this.$route.meta.layout ||
+        this.$route.matched[0].meta.layout ||
+        "AuthLayout"
+      );
     },
 
     ...mapGetters(["getError"]),

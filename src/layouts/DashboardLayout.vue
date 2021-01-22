@@ -4,7 +4,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title">
-            <router-link :to="'/'" tag="button">Menu</router-link>
+            <router-link :to="'/dashboard'" tag="button">Menu</router-link>
           </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -12,7 +12,7 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item v-for="item in setMenu" :key="item.title" :to="item.url">
+        <v-list-item v-for="item in setMenu" :key="item.title" :to="setPath(item)">
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -28,10 +28,13 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: "DashboardLayout",
 
   computed: {
+    ...mapGetters(["getUser"]),
     setMenu() {
       {
         return [
@@ -43,14 +46,23 @@ export default {
           {
             title: "Users",
             icon: "mdi-lock-open-check-outline",
-            url: "/users"
+            url: "/dashboard/users"
           },
           {
             title: "Profile",
             icon: "mdi-account-lock-outline",
-            url: "/profile"
+            url: "/dashboard/profile"
           }
         ];
+      }
+    }
+  },
+  methods: {
+    setPath(item) {
+      if (item.url === "/dashboard/profile") {
+        return { name: "Profile", params: { id: this.getUser.id } };
+      } else {
+        return item.url;
       }
     }
   }
@@ -58,8 +70,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-div {
-  background-color: yellow;
-}
 </style>
 
