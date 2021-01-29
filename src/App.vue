@@ -41,11 +41,11 @@ export default {
       return false;
     }
   },
-  mounted() {
+  created() {
     if (localStorage.getItem("user")) {
       try {
         this.$store.commit("setUser", JSON.parse(localStorage.getItem("user")));
-        this.$router.push("/dashboard");
+        //this.$router.push("/dashboard");
       } catch (e) {
         localStorage.removeItem("user");
       }

@@ -12,7 +12,7 @@
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item v-for="item in setMenu" :key="item.title" :to="setPath(item)">
+        <v-list-item v-for="item in setMenu" :key="item.title" :to="item.url">
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -51,21 +51,13 @@ export default {
           {
             title: "Profile",
             icon: "mdi-account-lock-outline",
-            url: "/dashboard/profile"
+            url: "/dashboard/profile/:id"
           }
         ];
       }
     }
   },
-  methods: {
-    setPath(item) {
-      if (item.url === "/dashboard/profile") {
-        return { name: "Profile", params: { id: this.getUser.id } };
-      } else {
-        return item.url;
-      }
-    }
-  }
+  methods: {}
 };
 </script>
 

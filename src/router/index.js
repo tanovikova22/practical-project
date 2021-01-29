@@ -5,35 +5,36 @@ import Registration from '../components/Registration'
 import LogIn from '../components/LogIn'
 import DashBoard from '../components/DashBoard'
 import HomePage from '../components/HomePage'
-import store from '../store'
+//import store from '../store'
 import Users from '../components/Users'
 import Profile from '../components/Profile'
 
 Vue.use(Router);
 
 
-function guard(to, from, next) {
-    if (store.getters.isLogged) {
-        next()
-    } else {
-        next('/login?loginError=true')
-    }
-}
+// function guard(to, from, next) {
+//     if (store.getters.isLogged) {
+//         next()
+//     } else {
+//         next('/login?loginError=true')
+//     }
+// }
+
+
+
 
 export default new Router(
 
     {
         mode: 'history',
-        routes: [
-            {
+        routes: [{
                 path: '/dashboard',
                 component: DashBoard,
-                beforeEnter: guard,
+                //beforeEnter: guard,
                 meta: {
                     layout: 'DashboardLayout'
                 },
-                children: [
-                    {
+                children: [{
                         path: 'users',
                         component: Users,
                         layout: 'DashboardLayout'
@@ -52,8 +53,7 @@ export default new Router(
                 meta: {
                     layout: 'AuthLayout'
                 },
-                children: [
-                    {
+                children: [{
                         path: 'login',
                         component: LogIn
                     },
@@ -69,4 +69,3 @@ export default new Router(
             }
         ],
     })
-

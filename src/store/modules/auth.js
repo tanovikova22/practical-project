@@ -17,14 +17,19 @@ export default {
     },
 
     actions: {
-        async registrate({ commit }, payload) {
+        async registrate({
+            commit
+        }, payload) {
 
             commit('setLoading', true)
 
             await firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
                 .then(user => {
                     let id = user.user.uid;
-                    commit('setUser', { ...payload, id })
+                    commit('setUser', {
+                        ...payload,
+                        id
+                    })
 
 
                     firebase.database().ref('users/' + id).set({
@@ -32,13 +37,17 @@ export default {
                         id
                     })
                     router.push("/dashboard")
-                    localStorage.setItem('user', JSON.stringify({ ...payload }))
+                    localStorage.setItem('user', JSON.stringify({
+                        ...payload
+                    }))
                 }).catch(error => commit('setError', error.message))
 
             commit('setLoading', false)
         },
 
-        async login({ commit }, payload) {
+        async login({
+            commit
+        }, payload) {
 
             commit('setLoading', true)
 
@@ -48,8 +57,12 @@ export default {
                 let userData = firebase.database().ref('users/' + id)
                 userData.on('value', (snapshot) => {
                     const data = snapshot.val()
-                    commit('setUser', { ...data })
-                    localStorage.setItem('user', JSON.stringify({ ...data }))
+                    commit('setUser', {
+                        ...data
+                    })
+                    localStorage.setItem('user', JSON.stringify({
+                        ...data
+                    }))
                     router.push("/dashboard")
                 })
             } catch (error) {
@@ -58,16 +71,19 @@ export default {
 
             commit('setLoading', false)
         },
-        async logout({ commit }) {
+        async logout({
+            commit
+        }) {
             await firebase.auth().signOut().then(() => {
 
                 commit('setUser', null)
                 localStorage.removeItem('user')
                 router.push('/app')
-            }
-            ).catch(e => commit('setError', e.message))
+            }).catch(e => commit('setError', e.message))
         },
-        async getAllUsers({ commit }) {
+        async getAllUsers({
+            commit
+        }) {
             commit('setLoading', true)
             try {
                 await firebase.database().ref('users').once('value').then((snapshot) => {
