@@ -1,7 +1,7 @@
 export default {
     state: {
         loading: false,
-        error: ''
+        error: null
     },
     mutations: {
         setLoading(state, payload) {

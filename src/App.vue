@@ -4,10 +4,10 @@
       <component :is="layout">
         <router-view></router-view>
       </component>
-      <v-snackbar :value="showWindow" @input="setError('')">
+      <v-snackbar :value="showWindow" @input="setError(null)" :color="setColor">
         {{ getError }}
         <template v-slot:action="{ attrs }">
-          <v-btn color="blue" depressed v-bind="attrs" @click="setError('')">Close</v-btn>
+          <v-btn color="blue" depressed v-bind="attrs" @click="setError(null)">Close</v-btn>
         </template>
       </v-snackbar>
     </v-main>
@@ -15,13 +15,9 @@
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
   name: "App",
-
-  methods: {
-    ...mapMutations(["setError"])
-  },
 
   computed: {
     layout() {
@@ -39,10 +35,32 @@ export default {
         return true;
       }
       return false;
+    },
+
+    setColor() {
+      if (
+        this.getError &&
+        (this.getError.code === "auth/user-not-found" ||
+          this.getError.code === "auth/too-many-requests")
+      )
+        return "red";
+      else return "black";
     }
   },
-  created() {
-    if (localStorage.getItem("user")) {
+  methods: {
+    ...mapMutations(["setError"]),
+    ...mapActions(["signInByToken"])
+  },
+  async mounted() {
+    // if (localStorage.getItem("user")) {
+    //   try {
+    //     this.$store.commit("setUser", JSON.parse(localStorage.getItem("user")));
+    //     //this.$router.push("/dashboard");
+    //   } catch (e) {
+    //     localStorage.removeItem("user");
+    //   }
+    // }
+    if (localStorage.getItem("token")) {
       try {
         this.$store.commit("setUser", JSON.parse(localStorage.getItem("user")));
         //this.$router.push("/dashboard");

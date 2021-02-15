@@ -1,17 +1,29 @@
 import router from './index'
-import store from '../store'
 
 router.beforeEach((to, from, next) => {
-    if (store.getters.isLogged) {
+    if (localStorage.getItem('token')) {
         if (to.path === '/app') {
             next({
                 path: '/dashboard'
             })
+        } else {
+            next()
         }
-        if (to.path === "/dashboard/profile/:id") {
+    } else {
+        if (to.path === '/dashboard') {
             next({
-                path: `/dashboard/profile/${store.getters.getUser.id}`
+                path: '/app'
             })
+        } else if (to.path === '/dashboard/users') {
+            next({
+                path: '/app'
+            })
+        } else if ((to.path).indexOf('/dashboard/profile') != -1) {
+            next({
+                path: '/app'
+            })
+        } else {
+            next()
         }
     }
 })

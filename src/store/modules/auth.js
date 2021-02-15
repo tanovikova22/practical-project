@@ -25,6 +25,7 @@ export default {
 
             await firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
                 .then(user => {
+                    console.log(user)
                     let id = user.user.uid;
                     commit('setUser', {
                         ...payload,
@@ -37,10 +38,13 @@ export default {
                         id
                     })
                     router.push("/dashboard")
+                    firebase.auth().currentUser.getIdToken().then(token => {
+                        localStorage.setItem('token', (token))
+                    }).catch(e => console.log(e))
                     localStorage.setItem('user', JSON.stringify({
                         ...payload
                     }))
-                }).catch(error => commit('setError', error.message))
+                }).catch(error => commit('setError', error))
 
             commit('setLoading', false)
         },
@@ -60,13 +64,18 @@ export default {
                     commit('setUser', {
                         ...data
                     })
+                    firebase.auth().currentUser.getIdToken().then(token => {
+                        localStorage.setItem('token', (token))
+                    }).catch(e => console.log(e))
+
                     localStorage.setItem('user', JSON.stringify({
                         ...data
                     }))
                     router.push("/dashboard")
                 })
             } catch (error) {
-                commit('setError', error.message)
+                commit('setError', error)
+                console.log(error)
             }
 
             commit('setLoading', false)
@@ -74,12 +83,15 @@ export default {
         async logout({
             commit
         }) {
+            await firebase.auth().currentUser.getIdToken().then(token => {
+                localStorage.removeItem('token', token)
+            }).catch(e => console.log(e))
             await firebase.auth().signOut().then(() => {
-
                 commit('setUser', null)
+
                 localStorage.removeItem('user')
                 router.push('/app')
-            }).catch(e => commit('setError', e.message))
+            }).catch(e => commit('setError', e))
         },
         async getAllUsers({
             commit
@@ -90,11 +102,12 @@ export default {
                     commit('setAll', Object.values(snapshot.val()))
                 })
             } catch (e) {
-                commit('setError', e.message)
+                commit('setError', e)
             }
             commit('setLoading', false)
 
-        }
+        },
+
     },
 
 

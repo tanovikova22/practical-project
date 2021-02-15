@@ -1,13 +1,13 @@
 import Vue from 'vue';
 import Router from 'vue-router'
 
-import Registration from '../components/Registration'
-import LogIn from '../components/LogIn'
-import DashBoard from '../components/DashBoard'
-import HomePage from '../components/HomePage'
+import Registration from '../components/Auth/Registration.vue'
+import LogIn from '../components/Auth/LogIn.vue'
+import DashBoard from '../components/Dashboard/DashBoard.vue'
+import HomePage from '../components/Auth/HomePage.vue'
 //import store from '../store'
-import Users from '../components/Users'
-import Profile from '../components/Profile'
+import Users from '../components/Dashboard/Users.vue'
+import Profile from '../components/Dashboard/Profile.vue'
 
 Vue.use(Router);
 
