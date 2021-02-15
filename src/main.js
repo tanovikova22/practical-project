@@ -6,12 +6,6 @@ import Vuelidate from 'vuelidate';
 import store from "./store";
 import firebase from "firebase";
 
-import AuthLayout from './layouts/AuthLayout'
-import DashboardLayout from './layouts/DashboardLayout'
-
-Vue.component('AuthLayout', AuthLayout)
-Vue.component('DashboardLayout', DashboardLayout)
-
 Vue.config.productionTip = false
 
 Vue.use(Vuelidate);

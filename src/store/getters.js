@@ -5,8 +5,7 @@ const getters = {
 
     getLoading: ({ common }) => common.loading,
     getError: ({ common }) => common.error,
-
-    getLayout: ({ layouts }) => layouts.layout
+    
 }
 
 export default getters;

@@ -23,7 +23,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <slot/>
+     <router-view></router-view>
   </div>
 </template>
 
