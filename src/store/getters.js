@@ -1,7 +1,7 @@
 const getters = {
-    getUser: ({ auth }) => auth.user,
+    getUser: ({ auth }) => auth.userData,
     isLogged: ({ auth }) => auth.user !== null,
-    getAll: ({ auth }) => auth.allUsers,
+    getAll: ({ dashboard }) => dashboard.allUsers,
 
     getLoading: ({ common }) => common.loading,
     getError: ({ common }) => common.error,

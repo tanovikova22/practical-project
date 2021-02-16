@@ -16,7 +16,7 @@
     </v-form>
 
     <v-flex xs12 sm8 md4 v-if="getAll !== null">
-      <v-card class="d-flex justify-center mb-6" v-for="(item, idx) in users" :key="idx">
+      <v-card class="d-flex justify-center mb-6" v-for="(item, idx) in getAll" :key="idx">
         <v-list-item three-line>
           <v-list-item-content>
             <v-list-item-title v-html="item.name"></v-list-item-title>
@@ -34,15 +34,18 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   data: () => ({
     search: "",
-    users: []
   }),
   computed: {
     ...mapGetters(["getAll", "getLoading"])
   },
   methods: {
-    ...mapActions(["getAllUsers"])
+    ...mapActions(["getAllUsers"]),
+
+    filterItems(e){
+      console.log(e)
+    }
   },
-  mounted() {
+  created() {
     this.getAllUsers();
   }
 };

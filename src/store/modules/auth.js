@@ -3,16 +3,17 @@ import router from './../../router'
 
 export default {
     state: {
-        user: null,
-        allUsers: null
+        userData: null,
+        token: null
     },
 
     mutations: {
         setUser(state, payload) {
-            state.user = payload
+            state.userData = payload
         },
-        setAll(state, payload) {
-            state.allUsers = payload
+
+        setToken(state, payload){
+            state.token = payload
         }
     },
 
@@ -25,7 +26,6 @@ export default {
 
             await firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
                 .then(user => {
-                    console.log(user)
                     let id = user.user.uid;
                     commit('setUser', {
                         ...payload,
@@ -37,13 +37,10 @@ export default {
                         ...payload,
                         id
                     })
-                    router.push("/dashboard")
+                    router.push("/dashboard/users")
                     firebase.auth().currentUser.getIdToken().then(token => {
                         localStorage.setItem('token', (token))
                     }).catch(e => console.log(e))
-                    localStorage.setItem('user', JSON.stringify({
-                        ...payload
-                    }))
                 }).catch(error => commit('setError', error))
 
             commit('setLoading', false)
@@ -68,10 +65,7 @@ export default {
                         localStorage.setItem('token', (token))
                     }).catch(e => console.log(e))
 
-                    localStorage.setItem('user', JSON.stringify({
-                        ...data
-                    }))
-                    router.push("/dashboard")
+                    router.push("/dashboard/users")
                 })
             } catch (error) {
                 commit('setError', error)
@@ -80,6 +74,7 @@ export default {
 
             commit('setLoading', false)
         },
+
         async logout({
             commit
         }) {
@@ -89,25 +84,9 @@ export default {
             await firebase.auth().signOut().then(() => {
                 commit('setUser', null)
 
-                localStorage.removeItem('user')
-                router.push('/app')
+                router.push('/login')
             }).catch(e => commit('setError', e))
         },
-        async getAllUsers({
-            commit
-        }) {
-            commit('setLoading', true)
-            try {
-                await firebase.database().ref('users').once('value').then((snapshot) => {
-                    commit('setAll', Object.values(snapshot.val()))
-                })
-            } catch (e) {
-                commit('setError', e)
-            }
-            commit('setLoading', false)
-
-        },
-
     },
 
 
