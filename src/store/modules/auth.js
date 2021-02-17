@@ -12,7 +12,7 @@ export default {
             state.userData = payload
         },
 
-        setToken(state, payload){
+        setToken(state, payload) {
             state.token = payload
         }
     },
@@ -41,7 +41,9 @@ export default {
                     firebase.auth().currentUser.getIdToken().then(token => {
                         localStorage.setItem('token', (token))
                     }).catch(e => console.log(e))
-                }).catch(error => commit('setError', error))
+                }).catch(error => {
+                    commit('setError', error)
+                })
 
             commit('setLoading', false)
         },
