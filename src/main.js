@@ -5,6 +5,7 @@ import router from './router';
 import Vuelidate from 'vuelidate';
 import store from "./store";
 import firebase from "firebase";
+import './router/guard'
 
 Vue.config.productionTip = false
 

@@ -1,52 +1,18 @@
 <template>
   <v-app>
     <v-main>
-        <router-view></router-view>
-      <v-snackbar :value="showWindow" @input="setError(null)" :color="setColor">
-        {{ getError }}
-        <template v-slot:action="{ attrs }">
-          <v-btn color="blue" depressed v-bind="attrs" @click="setError(null)">Close</v-btn>
-        </template>
-      </v-snackbar>
+      <router-view></router-view>
+      <error></error>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import { mapMutations, mapGetters } from "vuex";
+import Error from "./components/ErrorWindow.vue";
 export default {
   name: "App",
-
-  computed: {
-
-    ...mapGetters(["getError"]),
-
-    showWindow() {
-     return Boolean(this.getError)
-    },
-
-    setColor() {
-      if (this.getError){
-        switch(this.getError){
-          case "auth/user-not-found" : 
-            return 'red';
-          case "auth/too-many-requests" :
-            return 'yellow';
-          default: 'black';
-        }
-      }
-      return "black";
-    }
-  },
-  methods: {
-    ...mapMutations(["setError"]),
-  },
+  components: {
+    Error
+  }
 };
 </script>
-
-<style lang="scss" scoped>
-button:focus {
-  outline: 0;
-}
-</style>
-

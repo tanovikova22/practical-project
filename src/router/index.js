@@ -14,7 +14,7 @@ export default new Router({
   routes: [{
       path: "/dashboard",
       component: DashBoard,
-      redirect: "/dahboard/users",
+      redirect: "/dashboard/users",
       children: [{
           path: "users",
           name: "Users",

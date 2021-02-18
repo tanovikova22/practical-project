@@ -6,7 +6,7 @@
 
     <v-form>
       <v-container>
-        <v-text-field v-model="search" @input="filterItems">
+        <v-text-field v-model="search">
           <template v-slot:label>
             Whom ure you looking for?
             <v-icon style="vertical-align: middle">{{"mdi-magnify"}}</v-icon>
@@ -16,7 +16,7 @@
     </v-form>
 
     <v-flex xs12 sm8 md4 v-if="getAll !== null">
-      <v-card class="d-flex justify-center mb-6" v-for="(item, idx) in getAll" :key="idx">
+      <v-card class="d-flex justify-center mb-6" v-for="(item, idx) in  filterItems" :key="idx">
         <v-list-item three-line>
           <v-list-item-content>
             <v-list-item-title v-html="item.name"></v-list-item-title>
@@ -30,21 +30,24 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data: () => ({
-    search: "",
+    search: ""
   }),
   computed: {
-    ...mapGetters(["getAll", "getLoading"])
+    ...mapGetters(["getAll", "getLoading"]),
+    filterItems() {
+      return this.getAll.filter(element =>
+        element.name.toLowerCase().includes(this.search.toLowerCase())
+      );
+    }
   },
   methods: {
     ...mapActions(["getAllUsers"]),
-
-    filterItems(e){
-      console.log(e)
-    }
+    ...mapMutations(["setAll"])
   },
+
   created() {
     this.getAllUsers();
   }

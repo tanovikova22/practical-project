@@ -3,7 +3,7 @@
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="title">
-          <!-- <router-link :to="'/dashboard'" tag="button">Menu</router-link> -->
+          <router-link :to="'/dashboard'" tag="button">Menu</router-link>
         </v-list-item-title>
       </v-list-item-content>
     </v-list-item>

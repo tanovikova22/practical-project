@@ -4,7 +4,7 @@ import router from './../../router'
 export default {
     state: {
         userData: null,
-        token: null
+        token: localStorage.getItem("token")
     },
 
     mutations: {
@@ -37,9 +37,10 @@ export default {
                         ...payload,
                         id
                     })
-                    router.push("/dashboard/users")
                     firebase.auth().currentUser.getIdToken().then(token => {
                         localStorage.setItem('token', (token))
+                        commit('setToken', token)
+                        router.push("/dashboard/users")
                     }).catch(e => console.log(e))
                 }).catch(error => {
                     commit('setError', error)
@@ -58,16 +59,17 @@ export default {
                 let response = await firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
                 let id = response.user.uid;
                 let userData = firebase.database().ref('users/' + id)
-                userData.on('value', (snapshot) => {
+                userData.on('value', async (snapshot) => {
                     const data = snapshot.val()
                     commit('setUser', {
                         ...data
                     })
-                    firebase.auth().currentUser.getIdToken().then(token => {
+                    await firebase.auth().currentUser.getIdToken().then(token => {
                         localStorage.setItem('token', (token))
+                        commit('setToken', token)
+                        router.push("/dashboard/users")
                     }).catch(e => console.log(e))
 
-                    router.push("/dashboard/users")
                 })
             } catch (error) {
                 commit('setError', error)
@@ -80,12 +82,10 @@ export default {
         async logout({
             commit
         }) {
-            await firebase.auth().currentUser.getIdToken().then(token => {
-                localStorage.removeItem('token', token)
-            }).catch(e => console.log(e))
+            localStorage.removeItem('token')
+            commit('setToken', null)
             await firebase.auth().signOut().then(() => {
                 commit('setUser', null)
-
                 router.push('/login')
             }).catch(e => commit('setError', e))
         },

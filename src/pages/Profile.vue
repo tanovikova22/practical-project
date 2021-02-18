@@ -15,21 +15,22 @@
           >
         </v-list-item-avatar>
       </v-list-item>
+      <v-card-actions>
+        <v-btn @click="logout">Log out</v-btn>
+      </v-card-actions>
     </v-card>
   </v-flex>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   computed: {
     ...mapGetters(["getUser"])
   },
   methods: {
-    f() {
-      console.log(this.getUser);
-    }
+    ...mapActions(["logout"])
   }
 };
 </script>
