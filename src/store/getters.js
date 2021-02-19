@@ -1,11 +1,22 @@
 const getters = {
-    getUser: ({ auth }) => auth.userData,
-    isLogged: ({ auth }) => auth.user !== null,
-    getAll: ({ dashboard }) => dashboard.allUsers,
+    getUser: ({
+        auth
+    }) => auth.userData,
+    isLogged: ({
+        auth
+    }) => auth.user !== null,
 
-    getLoading: ({ common }) => common.loading,
-    getError: ({ common }) => common.error,
-    
+    getLoading: ({
+        common
+    }) => common.loading,
+    getError: ({
+        common
+    }) => common.error,
+
+    getAll: ({
+        dashboard
+    }) => dashboard.allUsers,
+
 }
 
 export default getters;

@@ -14,6 +14,13 @@ export default {
 
         setToken(state, payload) {
             state.token = payload
+        },
+
+        setAvatar(state, payload) {
+            state.userData = {
+                ...state.UserData,
+                payload
+            }
         }
     },
 
@@ -89,6 +96,28 @@ export default {
                 router.push('/login')
             }).catch(e => commit('setError', e))
         },
+
+        async recordAvatar({
+            commit,
+            rootGetters
+        }, payload) {
+            try {
+                commit('setError', true)
+                await firebase.database().ref(`users/${rootGetters.getUser.id}/`).set({
+                    ...rootGetters.getUser,
+                    payload
+                })
+                commit('setUser', {
+                    ...rootGetters.getUser,
+                    'payload': payload
+                })
+                commit('setLoading', false)
+            } catch (e) {
+                commit('setError', e)
+            }
+
+        }
+
     },
 
 

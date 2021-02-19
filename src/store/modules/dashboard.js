@@ -1,6 +1,7 @@
 import firebase from "firebase";
 
 
+
 export default {
 
     state: {
@@ -26,8 +27,9 @@ export default {
                 commit('setError', e)
             }
             commit('setLoading', false)
-    
+
         },
+
     }
 
 }

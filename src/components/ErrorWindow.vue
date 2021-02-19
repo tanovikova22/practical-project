@@ -1,5 +1,5 @@
 <template>
-  <v-snackbar :value="showWindow" @input="setError(null)" :color="setColor">
+  <v-snackbar timeout="-1" :value="showWindow" @input="setError(null)" :color="setColor">
     {{ getError }}
     <template v-slot:action="{ attrs }">
       <v-btn color="pink" depressed v-bind="attrs" @click="setError(null)">Close</v-btn>
