@@ -14,13 +14,6 @@ export default {
 
         setToken(state, payload) {
             state.token = payload
-        },
-
-        setAvatar(state, payload) {
-            state.userData = {
-                ...state.UserData,
-                payload
-            }
         }
     },
 
@@ -59,7 +52,6 @@ export default {
         async login({
             commit
         }, payload) {
-
             commit('setLoading', true)
 
             try {
@@ -100,16 +92,14 @@ export default {
         async recordAvatar({
             commit,
             rootGetters
-        }, payload) {
+        }, avatar) {
             try {
-                commit('setError', true)
-                await firebase.database().ref(`users/${rootGetters.getUser.id}/`).set({
-                    ...rootGetters.getUser,
-                    payload
+                commit('setLoading', true)
+                await firebase.database().ref(`users/${rootGetters.getUser.id}/`).update({
+                    avatar
                 })
                 commit('setUser', {
                     ...rootGetters.getUser,
-                    'payload': payload
                 })
                 commit('setLoading', false)
             } catch (e) {

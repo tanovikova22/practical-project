@@ -4,7 +4,7 @@
       <v-progress-circular v-if="!getAll" :size="50" color="primary" indeterminate></v-progress-circular>
     </div>
 
-    <v-form>
+    <v-form v-if="getAll !== null">
       <v-container>
         <v-text-field v-model="search">
           <template v-slot:label>

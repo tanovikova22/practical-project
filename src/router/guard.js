@@ -6,8 +6,9 @@ router.beforeEach((to, from, next) => {
     let token = store.state.auth.token
     let whitelist = ['/login', '/registration']
     let userData = store.state.auth.userData
+
     if (token) {
-        console.log(1)
+
 
         if (userData) {
 
