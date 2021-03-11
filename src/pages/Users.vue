@@ -14,9 +14,10 @@
         </v-text-field>
       </v-container>
     </v-form>
-
+    <v-btn class="mb-5 mr-2"  v-if="getAll !== null"  @click="pageNumber=pageNumber-1" :disabled="pageNumber === 0">Previous</v-btn>
+    <v-btn class="mb-5"  v-if="getAll !== null" @click="pageNumber=pageNumber+1" :disabled="isAnyPagAhead">Next</v-btn>
     <v-flex xs12 sm8 md4 v-if="getAll !== null">
-      <v-card class="d-flex justify-center mb-6" v-for="(item, idx) in  filterItems" :key="idx">
+      <v-card class="d-flex justify-center mb-6" v-for="(item, idx) in  showUsers" :key="idx">
         <v-list-item three-line>
           <v-list-item-content>
             <v-list-item-title v-html="item.name"></v-list-item-title>
@@ -26,6 +27,7 @@
         </v-list-item>
       </v-card>
     </v-flex>
+    <div>Page {{pageNumber+1}}/{{Math.ceil(filterItems.length/3)}}</div>
   </v-container>
 </template>
 
@@ -33,7 +35,8 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   data: () => ({
-    search: ""
+    search: "",
+    pageNumber: 0
   }),
   computed: {
     ...mapGetters(["getAll", "getLoading"]),
@@ -41,6 +44,14 @@ export default {
       return this.getAll.filter(element =>
         element.name.toLowerCase().includes(this.search.toLowerCase())
       );
+    },
+    showUsers(){
+     let start = this.pageNumber * 3
+     let end = start + 3 
+     return this.filterItems.slice(start, end)
+    },
+    isAnyPagAhead(){
+      return (this.pageNumber < (this.filterItems.length / 3) - 1) ? false : true
     }
   },
   methods: {
