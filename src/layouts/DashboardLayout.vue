@@ -26,7 +26,7 @@ export default {
           {
             title: "Users",
             icon: "mdi-lock-open-check-outline",
-            url: "/dashboard/users"
+            url: `/dashboard/users`
           },
           {
             title: "Profile",
