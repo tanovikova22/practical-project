@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     setUrl(item) {
-      if (item.url === "/dashboard/profile" && this.getUser !== null) {
+      if (item.url === "/dashboard/myProfile" && this.getUser !== null) {
         return { name: "Profile", params: { id: this.getUser.id } };
       } else {
         return item.url;

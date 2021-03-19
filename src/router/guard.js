@@ -12,7 +12,7 @@ router.beforeEach((to, from, next) => {
 
         if (userData) {
             if (whitelist.includes(to.path)) {
-                next('/dashboard/profile')
+                next('/dashboard/myProfile')
             } else {
                 next()
             }

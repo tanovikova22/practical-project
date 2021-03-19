@@ -19,7 +19,9 @@
           :items="emailVariety"
           v-model="emailChoice"
           label="Filter by emails"
-        ></v-select>
+          @click="pageNumber = 1"
+        >
+        </v-select>
         <v-icon v-if="emailChoice" @click="emailChoice = ''">{{"mdi-close"}}</v-icon>
       </v-col>
     </v-row>
@@ -42,9 +44,10 @@
       >
         <v-select
           :items="numToShow"
-          v-model="displayNum"
+          v-model="usersToShow"
           @change="pageNumber = 1"
-        ></v-select>
+        >
+        </v-select>
       </v-col>
     </v-row>
     <v-simple-table
@@ -80,7 +83,7 @@
           </td>
         <template v-if="editUserIndex === idx">
           <td>
-            <v-text-field
+            <v-text-field required
             label="Name"
             v-model="user.name"
           ></v-text-field>
@@ -126,7 +129,9 @@
                     <v-btn width="100%" dark light depressed color="green" @click="editUser(user.id)">Edit</v-btn>
                   </v-list-item>
                   <v-list-item>
-                    <v-btn width="100%" dark depressed color="blue" @click="viewProfile">View profile</v-btn>
+                    <router-link :to="'/dashboard/profile/'+user.id"  tag="button">
+                    <v-btn width="100%" dark depressed color="blue">View profile</v-btn>
+                    </router-link>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -165,41 +170,39 @@ export default {
       'mail.ua'
     ],
     emailChoice: "",
-    displayNum: 1,
-    editUserIndex: null
+    editUserIndex: null,
+    usersToShow: 1,
   }),
   computed: {
     ...mapGetters(["getAll", "getLoading"]),
 
-    filterItems() {
+     filterItems() {
       let filteredByString = this.getAll.filter(element => 
-        element.name.toLowerCase().includes(this.search.toLowerCase())
+      element.name.toLowerCase().includes(this.search.toLowerCase())
       );
       return this.emailChoice ? (
          filteredByString.filter(element => {
            let searchLength = this.emailChoice.length
            let lastOfUsersEmail = element.email.slice(-searchLength)
-           this.$router.push({path: '/dashboard/users', query: {email: this.emailChoice}})
            return lastOfUsersEmail === this.emailChoice
           })
       ) : filteredByString
     },
 
     numberOfPages(){
-      return Math.ceil(this.filterItems.length / this.displayNum)
+      return Math.ceil(this.filterItems.length / this.usersToShow)
     },
 
     showenItems(){
-      let lastElement = (this.pageNumber * this.displayNum)
-      let firstElement = (this.pageNumber - 1) * this.displayNum
+      let lastElement = (this.pageNumber * this.usersToShow)
+      let firstElement = (this.pageNumber - 1) * this.usersToShow
       return this.filterItems.slice(firstElement, lastElement)
     },
 
     numToShow(){
       let numOfUsers = [1, 3, 5, 10, 20, 50]
-      numOfUsers.push(this.filterItems.length)
       return numOfUsers.filter(num => num <= this.filterItems.length)
-    }
+    },
 
 
   },
@@ -239,19 +242,18 @@ export default {
     this.getAll.splice(deleteIndex, 1)
   },
 
-  viewProfile(){
-    console.log(5)
+  viewProfile(uid){
+    this.$router.push(`/dashboard/profile/${uid}`)
   },
 
   editUser(uid){
-    console.log(10)
     this.editUserIndex = this.getAll.findIndex(user => user.id === uid)
   }
   },
 
   created() {
     this.getAllUsers()
-    }
+  }
 };
 </script>
 

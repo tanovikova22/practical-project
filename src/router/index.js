@@ -6,6 +6,7 @@ import LogIn from "../pages/LogIn.vue";
 import DashBoard from "../layouts/DashboardLayout.vue";
 import Users from "../pages/Users.vue";
 import Profile from "../pages/Profile.vue";
+import UserProfile from '../pages/UserProfile.vue'
 
 Vue.use(Router);
 
@@ -21,9 +22,13 @@ export default new Router({
           component: Users,
         },
         {
-          path: "profile/:id",
+          path: "myProfile/:id",
           name: "Profile",
           component: Profile
+        },
+        {
+          path: "profile/:id",
+          component: UserProfile
         }
       ]
     },

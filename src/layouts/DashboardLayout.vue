@@ -31,7 +31,7 @@ export default {
           {
             title: "Profile",
             icon: "mdi-account-lock-outline",
-            url: "/dashboard/profile"
+            url: "/dashboard/myProfile"
           }
         ];
       }
