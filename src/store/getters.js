@@ -6,14 +6,14 @@ const getters = {
         auth
     }) => auth.user !== null,
 
-    getLoading: ({
+    loading: ({
         common
     }) => common.loading,
     getError: ({
         common
     }) => common.error,
 
-    getAll: ({
+    users: ({
         dashboard
     }) => dashboard.allUsers,
 

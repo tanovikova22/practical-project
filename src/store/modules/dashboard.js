@@ -9,7 +9,7 @@ export default {
     },
 
     mutations: {
-        setAll(state, payload) {
+        setAllUsers(state, payload) {
             state.allUsers = payload
         }
     },
@@ -21,7 +21,7 @@ export default {
             commit('setLoading', true)
             try {
                 await firebase.database().ref('users').once('value').then((snapshot) => {
-                    commit('setAll', Object.values(snapshot.val()))
+                    commit('setAllUsers', Object.values(snapshot.val()))
                 })
             } catch (e) {
                 commit('setError', e)

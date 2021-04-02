@@ -22,7 +22,7 @@ export default new Router({
           component: Users,
         },
         {
-          path: "myProfile/:id",
+          path: "profile",
           name: "Profile",
           component: Profile
         },

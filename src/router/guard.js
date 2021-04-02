@@ -8,8 +8,6 @@ router.beforeEach((to, from, next) => {
     let userData = store.state.auth.userData
 
     if (token) {
-
-
         if (userData) {
             if (whitelist.includes(to.path)) {
                 next('/dashboard/myProfile')
@@ -24,10 +22,7 @@ router.beforeEach((to, from, next) => {
             next()
             console.log('response')
         }
-
     } else {
-        console.log(2)
-
         if (whitelist.includes(to.path)) {
             next()
         } else {

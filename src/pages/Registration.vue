@@ -1,90 +1,85 @@
 <template>
-  <v-app id="inspire">
-    <navbar></navbar>
-    <v-main>
-      <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
-          <v-col cols="12" sm="8" md="4">
-            <v-card class="elevation-12">
-              <v-toolbar color="deep-blue accent-4" dark flat>
-                <v-toolbar-title>Registration form</v-toolbar-title>
-                <v-spacer></v-spacer>
-              </v-toolbar>
-              <v-card-text>
-                <v-form @submit.prevent="onSubmit">
-                  <v-container v-if="firstPage">
-                    <v-text-field type="text" v-model="name" label="Name" @blur="$v.name.$touch()"></v-text-field>
-                    <div
-                      class="error-message"
-                      v-if="$v.name.$invalid && $v.name.$dirty"
-                    >Please input valid name</div>
-                    <v-text-field
-                      type="email"
-                      v-model="email"
-                      label="E-mail"
-                      @blur="$v.email.$touch()"
-                    ></v-text-field>
-                    <div
-                      class="error-message"
-                      v-if="$v.email.$invalid && $v.email.$dirty"
-                    >Please enter valid email</div>
-                    <v-text-field
-                      type="phone"
-                      v-model="phone"
-                      :counter="13"
-                      label="Phone"
-                      @blur="$v.phone.$touch()"
-                    ></v-text-field>
-                    <div
-                      class="error-message"
-                      v-if="$v.phone.$invalid && $v.phone.$dirty"
-                    >Please enter valid phone</div>
-                  </v-container>
-                  <v-container v-else>
-                    <v-text-field
-                      type="password"
-                      v-model="password"
-                      label="Password"
-                      @blur="$v.password.$touch()"
-                    ></v-text-field>
-                    <div
-                      class="error-message"
-                      v-if="$v.password.$invalid && $v.password.$dirty"
-                    >Please enter valid password</div>
-                    <v-text-field
-                      type="password"
-                      v-model="passwordConfirm"
-                      label="Confirm password"
-                      @blur="$v.passwordConfirm.$touch()"
-                    ></v-text-field>
-                    <div
-                      class="error-message"
-                      v-if="$v.passwordConfirm.$invalid && $v.passwordConfirm.$dirty"
-                    >Please enter same password</div>
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      v-if="getError"
-                      @click="firstPage = true"
-                      depressed
-                    >Return to the previous page</v-btn>
-                  </v-container>
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
+  <v-container class="fill-height" fluid>
+    <v-row align="center" justify="center">
+      <v-col cols="12" sm="8" md="4">
+        <v-card class="elevation-12">
+          <v-toolbar color="deep-blue accent-4" dark flat>
+            <v-toolbar-title>Registration form</v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-card-text>
+            <v-form @submit.prevent="onSubmit">
+              <v-container v-if="firstPage">
+                <v-text-field type="text" v-model="name" label="Name" @blur="$v.name.$touch()"></v-text-field>
+                <div
+                  class="error-message"
+                  v-if="$v.name.$invalid && $v.name.$dirty"
+                >Please input valid name</div>
+                <v-text-field
+                  type="email"
+                  v-model="email"
+                  label="E-mail"
+                  @blur="$v.email.$touch()"
+                ></v-text-field>
+                <div
+                  class="error-message"
+                  v-if="$v.email.$invalid && $v.email.$dirty"
+                >Please enter valid email</div>
+                <v-text-field
+                  type="phone"
+                  v-model="phone"
+                  :counter="13"
+                  label="Phone"
+                  @blur="$v.phone.$touch()"
+                ></v-text-field>
+                <div
+                  class="error-message"
+                  v-if="$v.phone.$invalid && $v.phone.$dirty"
+                >Please enter valid phone</div>
+              </v-container>
+              <v-container v-else>
+                <v-text-field
+                  type="password"
+                  v-model="password"
+                  label="Password"
+                  @blur="$v.password.$touch()"
+                ></v-text-field>
+                <div
+                  class="error-message"
+                  v-if="$v.password.$invalid && $v.password.$dirty"
+                >Please enter valid password</div>
+                <v-text-field
+                  type="password"
+                  v-model="passwordConfirm"
+                  label="Confirm password"
+                  @blur="$v.passwordConfirm.$touch()"
+                ></v-text-field>
+                <div
+                  class="error-message"
+                  v-if="$v.passwordConfirm.$invalid && $v.passwordConfirm.$dirty"
+                >Please enter same password</div>
                 <v-spacer></v-spacer>
                 <v-btn
-                  class="primary"
-                  :disabled="isDisabled"
-                  :loading="getLoading"
-                  @click="next"
-                >{{nameButton}}</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </v-main>
-  </v-app>
+                  v-if="getError"
+                  @click="firstPage = true"
+                  depressed
+                >Return to the previous page</v-btn>
+              </v-container>
+            </v-form>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              class="primary"
+              :disabled="isDisabled"
+              :loading="getLoading"
+              @click="next"
+            >{{nameButton}}</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -97,7 +92,6 @@ import {
   numeric,
   helpers
 } from "vuelidate/lib/validators";
-import Navbar from "../components/Navbar.vue";
 import { mapActions, mapGetters } from "vuex";
 
 const alpha = helpers.regex("alpha", /[A-Z][a-z]{2,}/g);
@@ -170,9 +164,6 @@ export default {
     nameButton() {
       return this.firstPage ? "Next step " : "Finish";
     }
-  },
-  components: {
-    Navbar
   }
 };
 </script>

@@ -11,8 +11,6 @@ Vue.config.productionTip = false
 
 Vue.use(Vuelidate);
 
-
-
 new Vue({
   vuetify,
   router,
