@@ -12,12 +12,7 @@
           </v-toolbar>
           <v-form @submit.prevent="onSubmit">
             <v-card-text>
-              <v-text-field
-                type="email"
-                v-model="email"
-                label="E-mail"
-                @blur="$v.email.$touch()"
-              ></v-text-field>
+              <v-text-field type="email" v-model="email" label="E-mail" @blur="$v.email.$touch()"></v-text-field>
               <div
                 class="error-message"
                 v-if="$v.email.$invalid && $v.email.$dirty"
@@ -40,7 +35,7 @@
                 depressed
                 class="primary"
                 @submit="onSubmit"
-                :loading="getLoading"
+                :loading="loading"
                 :disabled="$v.password.$invalid || $v.email.$invalid"
               >Login</v-btn>
             </v-card-actions>
@@ -78,7 +73,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["getLoading"])
+    ...mapGetters(["loading"])
   }
 };
 </script>

@@ -4,12 +4,12 @@ const getters = {
     }) => auth.userData,
     isLogged: ({
         auth
-    }) => auth.user !== null,
+    }) => auth.userData !== null,
 
     loading: ({
         common
     }) => common.loading,
-    getError: ({
+    error: ({
         common
     }) => common.error,
 

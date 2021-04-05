@@ -1,6 +1,6 @@
 <template>
   <v-snackbar timeout="-1" :value="showWindow" @input="setError(null)" :color="setColor">
-    {{ getError }}
+    {{ error }}
     <template v-slot:action="{ attrs }">
       <v-btn color="pink" depressed v-bind="attrs" @click="setError(null)">Close</v-btn>
     </template>
@@ -11,15 +11,15 @@
 import { mapMutations, mapGetters } from "vuex";
 export default {
   computed: {
-    ...mapGetters(["getError"]),
+    ...mapGetters(["error"]),
 
     showWindow() {
-      return Boolean(this.getError);
+      return Boolean(this.error);
     },
 
     setColor() {
-      if (this.getError) {
-        switch (this.getError) {
+      if (this.error) {
+        switch (this.error) {
           case "auth/user-not-found":
             return "red";
           case "auth/too-many-requests":

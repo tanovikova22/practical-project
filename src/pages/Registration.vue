@@ -15,12 +15,7 @@
                   class="error-message"
                   v-if="$v.name.$invalid && $v.name.$dirty"
                 >Please input valid name</div>
-                <v-text-field
-                  type="email"
-                  v-model="email"
-                  label="E-mail"
-                  @blur="$v.email.$touch()"
-                ></v-text-field>
+                <v-text-field type="email" v-model="email" label="E-mail" @blur="$v.email.$touch()"></v-text-field>
                 <div
                   class="error-message"
                   v-if="$v.email.$invalid && $v.email.$dirty"
@@ -59,11 +54,7 @@
                   v-if="$v.passwordConfirm.$invalid && $v.passwordConfirm.$dirty"
                 >Please enter same password</div>
                 <v-spacer></v-spacer>
-                <v-btn
-                  v-if="getError"
-                  @click="firstPage = true"
-                  depressed
-                >Return to the previous page</v-btn>
+                <v-btn v-if="error" @click="firstPage = true" depressed>Return to the previous page</v-btn>
               </v-container>
             </v-form>
           </v-card-text>
@@ -72,7 +63,7 @@
             <v-btn
               class="primary"
               :disabled="isDisabled"
-              :loading="getLoading"
+              :loading="loading"
               @click="next"
             >{{nameButton}}</v-btn>
           </v-card-actions>
@@ -153,7 +144,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["getLoading", "getError"]),
+    ...mapGetters(["loading", "error"]),
     isDisabled() {
       return this.firstPage
         ? this.$v.phone.$invalid ||

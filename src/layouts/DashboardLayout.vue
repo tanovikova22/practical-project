@@ -1,14 +1,11 @@
 <template>
   <div>
-    <sidebar :menuItems="setMenu"></sidebar>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-
-import Sidebar from "../components/Sidebar.vue";
 
 export default {
   name: "DashboardLayout",
@@ -36,10 +33,6 @@ export default {
         ];
       }
     }
-  },
-
-  components: {
-    Sidebar
   }
 };
 </script>
