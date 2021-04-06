@@ -34,7 +34,7 @@
       <v-row align="center">
         Show:
         <v-col class="d-flex" cols="12" sm="1">
-          <v-select :items="numToShow" v-model="usersToShow" @change="pageNumber = 1"></v-select>
+          <v-select :items="usersNumToShow" v-model="usersToShow" @change="pageNumber = 1"></v-select>
         </v-col>
       </v-row>
       <v-simple-table fixed-header>
@@ -132,7 +132,7 @@
 
 <script>
 // TODO: to check props, methods, computed names
-import { mapGetters, mapActions, mapMutations } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   data: () => ({
@@ -176,17 +176,16 @@ export default {
       return this.filterItems.slice(firstElement, lastElement);
     },
 
-    numToShow() {
+    usersNumToShow() {
       let numOfUsers = [1, 3, 5, 10, 20, 50];
       return numOfUsers.filter(num => num <= this.filterItems.length);
     }
   },
   methods: {
     ...mapActions(["getAllUsers"]),
-    ...mapMutations(["setAllUsers"]),
 
     sortNamesASC() {
-      let users = this.users.sort((a, b) => {
+      this.users.sort((a, b) => {
         if (a.name < b.name) {
           return -1;
         }
@@ -195,8 +194,6 @@ export default {
         }
         return 0;
       });
-
-      this.setAllUsers(users);
     },
     sortNamesDESC() {
       // TODO: to refactor
@@ -235,8 +232,7 @@ export default {
 
     onChangeSelect() {
       this.pageNumber = 1;
-
-      this.usersToShow = this.numToShow[this.numToShow.length - 1];
+      this.usersToShow = this.usersNumToShow[this.usersNumToShow.length - 1];
     }
   },
 
